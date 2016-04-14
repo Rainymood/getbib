@@ -24,6 +24,6 @@ with open(filename,'a') as out:
 
 # @article{nameYEARword, ... } find cite_id between the first '{' and ','
 cite_id = query[0].split(',', 1)[0].split('{',1)[1]
-print "Citation added succefully!\n\cite{%s}\n\citeA{%s}" % (cite_id, cite_id)
+print "Citation added succesfully!\n\cite{%s}\n\citeA{%s}" % (cite_id, cite_id)
 
 
