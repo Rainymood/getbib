@@ -15,6 +15,9 @@ manually.  Copy the files to some dir you want to work from and make sure you
 execute the python script from that directory. If you have any more questions
 feel free to contact me. 
 
+If it wasn't explicit enough: Make sure that getbib.py and gscholar.py are in
+the same folder. 
+
 # Usage
 
     $ python getbib.py "<query>"
