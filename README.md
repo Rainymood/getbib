@@ -25,7 +25,7 @@ For example
 
 Which results in the following output
 
-    Citation added succefully!
+    Citation added succesfully!
     \cite{breiman2001random}
     \citeA{breiman2001random}
 
