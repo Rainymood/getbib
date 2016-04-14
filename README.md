@@ -3,6 +3,9 @@
 
 Getbib.py will automatically add the BiBTeX code to your specified .bib file. 
 
+Here is a [video](https://www.youtube.com/watch?v=Qnr1v3wg96I) which showcases
+getbib.py. Please don't mind my horrible english. 
+
 # Setup
 
 Because of time constraints I have not yet been able to make a really nice setup
