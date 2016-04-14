@@ -20,6 +20,12 @@ For example
 
     $ python getbib.py "Leo Breiman. Random forests. Machine Learning, 45(1):5–32, 2001."
 
+Which results in the following output
+
+    Citation added succefully!
+    \cite{breiman2001random}
+    \citeA{breiman2001random}
+
 I personally made a bash alias which shortens this to
 
     $ gb "<query>"
@@ -30,5 +36,8 @@ You can do so by adding the following line to your ~/.bashrc
 
 # Thanks
 
-I made this script by standing on the shoulders of [gscholar](www.google.com). 
+I made this script by standing on the shoulders of [gscholar](https://github.com/venthur/gscholar). 
+
+
+
 
