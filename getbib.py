@@ -39,4 +39,4 @@ else:
         for item in query:
             out.write("%s" % item)
         out.write("\n") # such that the next item is well spaced 
-    print "Citation 
+    print "Citation added succesfully!\n\cite{%s}\n\citeA{%s}" % (cite_id, cite_id)
