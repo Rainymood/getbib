@@ -35,11 +35,12 @@ def main(argv):
         if contains_duplicate(manual_entry) == True:
             print "Duplicate found, aborting."
             sys.exit(2)
+        manual_id = sys.argv[2].split(' ', 1)[0] + str(9) + str(random.randint(0,99)) # Use the first word + random int as the label
         with open(filename,'a') as out:
-            out.write("@manual{" + sys.argv[2].split(' ', 1)[0] + str(9) + str(random.randint(0,99)) + ",\n\t") # Use the first word + random int as the label
+            out.write("@manual{" + manual_id + ",\n\t")
             out.write("Title = {" + manual_entry + "}}")
             out.write("\n") # such that the next item is well spaced 
-        print "Manual entry added: " + manual_entry
+        print "Manual entry added successfully!\n\cite{%s}\n\citeA{%s}" % (manual_id, manual_id)
         sys.exit(2)
 
     # Get user input as query, request to gscholar and encode to UTF8
