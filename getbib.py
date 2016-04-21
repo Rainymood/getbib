@@ -1,65 +1,66 @@
-import gscholar
+import click
+from gscholar import gscholar
 import os
-import sys 
+import sys
 import random
 
-def contains_duplicate(cite_id):
+def contains_duplicate(filename, cite_id):
     """
     Check for duplicates in the .bib file (filename)
     """
     flag = False
-    with open(filename,'r') as out:
-        for line in out: 
-            if cite_id in line:
-                flag = True
-                return flag 
-            else:
-                pass
-    return flag 
+    if os.path.isfile(filename):
+        with open(filename, 'r') as out:
+            for line in out: 
+                if cite_id in line:
+                    flag = True
+                    return flag 
+                else:
+                    pass
+    return flag
 
-def main(argv):
-    # Set up bibtex filepath
-    # filepath = "/Users/janmeppe/Dropbox/School/Master/Master Thesis/tex/"
-    # filename = "master-thesis.bib"
-
-    # Set up bibtex filepath
-    global filepath
-    global filename
-    filepath = "<path to dir containing .bib file>" 
-    filename = "<filename of .bib file>"
-    os.chdir(filepath) # Change dir to filepath 
-
+@click.command()
+@click.argument('query')
+@click.option('-f', '--filename', default=None, type=str, help='Path to .bib file to update.')
+@click.option('--allresults', is_flag=True, help='Process all of the results, rather than only the top match')
+@click.option('--manual', default=None, type=str, help='Manual entry')
+def _main(query, filename, allresults, manual):
     # Manual entry
-    if sys.argv[1] == "--manual":
-        manual_entry = sys.argv[2]
+    if manual:
         if contains_duplicate(manual_entry) == True:
-            print "Duplicate found, aborting."
-            sys.exit(2)
-        manual_id = sys.argv[2].split(' ', 1)[0] + str(9) + str(random.randint(0,99)) # Use the first word + random int as the label
+            click.echo("Duplicate found, aborting.")
+            return
+        manual_id = manual.split(' ', 1)[0] + str(9) + str(random.randint(0,99)) # Use the first word + random int as the label
         with open(filename,'a') as out:
             out.write("@manual{" + manual_id + ",\n\t")
             out.write("Title = {" + manual_entry + "}}")
             out.write("\n") # such that the next item is well spaced 
-        print "Manual entry added successfully!\n\cite{%s}\n\citeA{%s}" % (manual_id, manual_id)
-        sys.exit(2)
+        click.echo('Manual entry added successfully!')
+        click.echo('    \cite{{{}}}'.format(manual_id))
+        click.echo('    \citeA{{{}}}'.format(manual_id))
+        return
 
-    # Get user input as query, request to gscholar and encode to UTF8
-    user_arg      = sys.argv[1]
-    query_unicode = gscholar.query(user_arg)
-    query         = [x.encode('UTF8') for x in query_unicode]
+    # Request to gscholar, encode to UTF8 (for python 2 compatibility)
+    response = gscholar.query(query.encode('UTF-8'), allresults=allresults)
+    response = [i.encode('UTF-8') for i in response]
 
-    # @article{nameYEARword, ... find cite_id between the first '{' and ','
-    cite_id = query[0].split(',', 1)[0].split('{',1)[1]
+    for item in response:
+        # @article{nameYEARword, ... find cite_id between the first '{' and ','
+        cite_id = item.split('{')[1].split(',')[0]
 
-    if contains_duplicate(cite_id) == True:
-        print "Duplicate found, aborting."
-    else:
-        # Append bibtex output to prespecified path 
-        with open(filename,'a') as out:
-            for item in query:
-                out.write("%s" % item)
-            out.write("\n") # such that the next item is well spaced 
-        print "Citation added successfully!\n\cite{%s}\n\citeA{%s}" % (cite_id, cite_id)
+        if filename:
+            if contains_duplicate(filename, cite_id) == True:
+                click.echo('Duplicate found for {}'.format(cite_id))
+            else:
+                # Append bibtex output to prespecified path
+                with open(filename,'a') as out:
+                    out.write(item)
+                    out.write("\n") # such that the next item is well spaced
+                click.echo('Citation added successfully!')
+                click.echo('    \cite{{{}}}'.format(cite_id))
+                click.echo('    \citeA{{{}}}'.format(cite_id))
+        else:
+            click.echo(item)
 
 if __name__ == "__main__":
-   main(sys.argv[1:])
+   _main()
